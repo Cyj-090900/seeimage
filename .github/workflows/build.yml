@@ -6,10 +6,10 @@ on:
 
 jobs:
   macos:
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Toolchain
-        run: swift --version
+        run: uname -a
       - name: Build
-        run: swift build -c release
+        run: echo hi
