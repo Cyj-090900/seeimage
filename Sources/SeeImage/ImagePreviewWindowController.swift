@@ -18,16 +18,16 @@ final class ImagePreviewWindowController: NSWindowController, NSWindowDelegate {
     private var errorState = NSView()
     private let spinner = NSProgressIndicator()
 
-    private lazy var previousButton = PillButton(title: "上一张", symbol: "chevron.left", target: self, action: #selector(goPrevious))
-    private lazy var nextButton = PillButton(title: "下一张", symbol: "chevron.right", target: self, action: #selector(goNext))
-    private lazy var rotateLeftButton = PillButton(title: "左转", symbol: "rotate.left", target: self, action: #selector(rotateLeft))
-    private lazy var rotateRightButton = PillButton(title: "右转", symbol: "rotate.right", target: self, action: #selector(rotateRight))
-    private lazy var flipButton = PillButton(title: "左右翻转", symbol: "arrow.left.and.right", target: self, action: #selector(flipImage))
-    private lazy var zoomOutButton = PillButton(title: "缩小", symbol: "minus", target: self, action: #selector(zoomOut))
-    private lazy var zoomInButton = PillButton(title: "放大", symbol: "plus", target: self, action: #selector(zoomIn))
-    private lazy var fitButton = PillButton(title: "适应窗口", symbol: "arrow.up.left.and.arrow.down.right", target: self, action: #selector(fitToWindow))
-    private lazy var openButton = PillButton(title: "浏览器打开原图", symbol: "safari", target: self, action: #selector(openInBrowser))
-    private lazy var saveButton = PillButton(title: "存储图片…", symbol: "square.and.arrow.down", target: self, action: #selector(saveImage))
+    private lazy var previousButton = PillButton(title: "‹ 上一张", target: self, action: #selector(goPrevious))
+    private lazy var nextButton = PillButton(title: "下一张 ›", target: self, action: #selector(goNext))
+    private lazy var rotateLeftButton = PillButton(title: "↺ 左转", target: self, action: #selector(rotateLeft))
+    private lazy var rotateRightButton = PillButton(title: "↻ 右转", target: self, action: #selector(rotateRight))
+    private lazy var flipButton = PillButton(title: "↔ 左右翻转", target: self, action: #selector(flipImage))
+    private lazy var zoomOutButton = PillButton(title: "− 缩小", target: self, action: #selector(zoomOut))
+    private lazy var zoomInButton = PillButton(title: "+ 放大", target: self, action: #selector(zoomIn))
+    private lazy var fitButton = PillButton(title: "适应窗口", target: self, action: #selector(fitToWindow))
+    private lazy var openButton = PillButton(title: "浏览器打开原图", target: self, action: #selector(openInBrowser))
+    private lazy var saveButton = PillButton(title: "存储图片…", target: self, action: #selector(saveImage))
 
     private var imageCache: [URL: NSImage] = [:]
     private var dataCache: [URL: Data] = [:]
@@ -114,7 +114,7 @@ final class ImagePreviewWindowController: NSWindowController, NSWindowDelegate {
         ])
         firstRow.orientation = .horizontal
         firstRow.alignment = .centerY
-        firstRow.spacing = 8
+        firstRow.spacing = 12
         firstRow.translatesAutoresizingMaskIntoConstraints = false
 
         let secondRow = NSStackView(views: [
@@ -122,11 +122,11 @@ final class ImagePreviewWindowController: NSWindowController, NSWindowDelegate {
         ])
         secondRow.orientation = .horizontal
         secondRow.alignment = .centerY
-        secondRow.spacing = 8
+        secondRow.spacing = 12
         secondRow.translatesAutoresizingMaskIntoConstraints = false
 
         for label in [counterLabel, zoomLabel] {
-            label.font = .monospacedDigitSystemFont(ofSize: 12.5, weight: .medium)
+            label.font = .monospacedDigitSystemFont(ofSize: 13, weight: .medium)
             label.textColor = .secondaryLabelColor
             label.alignment = .right
             label.setContentHuggingPriority(.required, for: .horizontal)
@@ -167,16 +167,16 @@ final class ImagePreviewWindowController: NSWindowController, NSWindowDelegate {
         }
 
         NSLayoutConstraint.activate([
-            firstRow.topAnchor.constraint(equalTo: content.topAnchor, constant: 16),
-            firstRow.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: 20),
+            firstRow.topAnchor.constraint(equalTo: content.topAnchor, constant: 18),
+            firstRow.centerXAnchor.constraint(equalTo: content.centerXAnchor),
 
-            secondRow.topAnchor.constraint(equalTo: firstRow.bottomAnchor, constant: 10),
-            secondRow.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: 20),
+            secondRow.topAnchor.constraint(equalTo: firstRow.bottomAnchor, constant: 12),
+            secondRow.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: 24),
 
             statusRow.centerYAnchor.constraint(equalTo: secondRow.centerYAnchor),
-            statusRow.trailingAnchor.constraint(equalTo: content.trailingAnchor, constant: -20),
+            statusRow.trailingAnchor.constraint(equalTo: content.trailingAnchor, constant: -24),
 
-            canvas.topAnchor.constraint(equalTo: secondRow.bottomAnchor, constant: 6),
+            canvas.topAnchor.constraint(equalTo: secondRow.bottomAnchor, constant: 8),
             canvas.leadingAnchor.constraint(equalTo: content.leadingAnchor),
             canvas.trailingAnchor.constraint(equalTo: content.trailingAnchor),
             canvas.bottomAnchor.constraint(equalTo: content.bottomAnchor),
