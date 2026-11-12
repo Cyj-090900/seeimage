@@ -167,14 +167,14 @@ final class ImagePreviewWindowController: NSWindowController, NSWindowDelegate {
         }
 
         NSLayoutConstraint.activate([
-            firstRow.topAnchor.constraint(equalTo: content.topAnchor, constant: 18),
+            firstRow.topAnchor.constraint(equalTo: content.topAnchor, constant: 20),
             firstRow.centerXAnchor.constraint(equalTo: content.centerXAnchor),
 
-            secondRow.topAnchor.constraint(equalTo: firstRow.bottomAnchor, constant: 12),
-            secondRow.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: 24),
+            secondRow.topAnchor.constraint(equalTo: firstRow.bottomAnchor, constant: 14),
+            secondRow.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: 28),
 
             statusRow.centerYAnchor.constraint(equalTo: secondRow.centerYAnchor),
-            statusRow.trailingAnchor.constraint(equalTo: content.trailingAnchor, constant: -24),
+            statusRow.trailingAnchor.constraint(equalTo: content.trailingAnchor, constant: -32),
 
             canvas.topAnchor.constraint(equalTo: secondRow.bottomAnchor, constant: 8),
             canvas.leadingAnchor.constraint(equalTo: content.leadingAnchor),
