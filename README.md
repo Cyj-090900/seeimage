@@ -28,6 +28,12 @@
 | 存储图片 | `⌘S` |
 | 打开图片 | `⌘O` |
 
+## 安装
+
+不想自己编译的话，可以直接下载 [Releases](https://github.com/Cyj-090900/seeimage/releases) 里打包好的 `SeeImage-macOS.zip`（Apple Silicon，macOS 13 及以上）。应用是本地 ad-hoc 签名、没有经过 Apple 公证，第一次打开请在 Finder 里右键 →「打开」。
+
+也可以把 `.app` 拖进「应用程序」，之后就能像平常一样双击打开图片、拖图片进窗口或把图片拖到 Dock 图标上。
+
 ## 构建
 
 只依赖 macOS 自带的 Swift 工具链（Xcode 或 Command Line Tools 任选其一），不需要 CocoaPods / SPM 依赖：
