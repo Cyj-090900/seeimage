@@ -5,7 +5,7 @@ import AppKit
 enum SnapshotRenderer {
     static func run(outputPath: String, inputs: [URL] = []) {
         let application = NSApplication.shared
-        application.setActivationPolicy(.accessory)
+        application.setActivationPolicy(.prohibited)
 
         var urls = inputs
         if urls.isEmpty {
@@ -23,18 +23,6 @@ enum SnapshotRenderer {
         guard let window = controller.window else { return }
         window.appearance = NSAppearance(named: .aqua)
         window.setContentSize(NSSize(width: 1120, height: 820))
-
-        // Briefly put the window on screen and make it key, so the traffic
-        // lights render in their active colours like a real window. It lives
-        // at the bottom-left corner for a fraction of a second.
-        window.setFrameOrigin(NSPoint(x: 40, y: 40))
-        window.makeKeyAndOrderFront(nil)
-        if #available(macOS 14.0, *) {
-            application.activate()
-        } else {
-            application.activate(ignoringOtherApps: true)
-        }
-        RunLoop.current.run(until: Date().addingTimeInterval(0.4))
 
         guard let view = window.contentView?.superview ?? window.contentView else { return }
         view.layoutSubtreeIfNeeded()
@@ -62,7 +50,6 @@ enum SnapshotRenderer {
             at: destination.deletingLastPathComponent(),
             withIntermediateDirectories: true
         )
-        window.orderOut(nil)
         do {
             try png.write(to: destination)
             print("snapshot written to \(destination.path)")
