@@ -4,6 +4,8 @@
 
 现在的重点是 **`seeimage.js`**：一个单文件、零依赖的网页版查看器，把原生窗口的布局、按钮、缩放 / 旋转 / 翻转 / 图集交互完整复刻到浏览器里。想在别的页面里直接拿来用，只需要引入这一个文件。
 
+在线示例：<https://cyj-090900.github.io/seeimage/demo.html>
+
 ![网页版预览](docs/web-preview.png)
 
 <img src="docs/web-mobile.png" width="300" alt="移动端">
