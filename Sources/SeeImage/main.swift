@@ -7,7 +7,18 @@ if let snapshotFlag = arguments.firstIndex(of: "--snapshot") {
         FileHandle.standardError.write(Data("usage: SeeImage --snapshot <output.png>\n".utf8))
         exit(2)
     }
-    SnapshotRenderer.run(outputPath: arguments[snapshotFlag + 1])
+    let outputPath = arguments[snapshotFlag + 1]
+    let inputs = arguments[(snapshotFlag + 2)...]
+        .filter { !$0.hasPrefix("-") }
+        .map { raw -> URL in
+            if let url = URL(string: raw),
+               let scheme = url.scheme?.lowercased(),
+               ["http", "https", "file"].contains(scheme) {
+                return url
+            }
+            return URL(fileURLWithPath: raw)
+        }
+    SnapshotRenderer.run(outputPath: outputPath, inputs: inputs)
     exit(0)
 }
 

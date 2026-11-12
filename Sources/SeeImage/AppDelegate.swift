@@ -23,6 +23,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         true
     }
 
+    func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
+        true
+    }
+
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         if !flag, let controller = controllers.last {
             controller.showWindow(nil)

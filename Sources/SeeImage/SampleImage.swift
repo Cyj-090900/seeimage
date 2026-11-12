@@ -90,18 +90,5 @@ enum SampleImage {
             ridge.color.setFill()
             path.fill()
         }
-
-        let mist = NSBezierPath(
-            roundedRect: NSRect(
-                x: 0,
-                y: height * 0.33,
-                width: width,
-                height: height * 0.10
-            ),
-            xRadius: width * 0.05,
-            yRadius: height * 0.05
-        )
-        NSColor.white.withAlphaComponent(0.10).setFill()
-        mist.fill()
     }
 }

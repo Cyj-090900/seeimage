@@ -3,41 +3,27 @@ import AppKit
 /// Renders the preview window into a PNG without showing it on screen. Used by
 /// CI and by `scripts/preview.sh` to keep documentation screenshots honest.
 enum SnapshotRenderer {
-    static func run(outputPath: String) {
+    static func run(outputPath: String, inputs: [URL] = []) {
         let application = NSApplication.shared
         application.setActivationPolicy(.prohibited)
 
-        let size = NSSize(width: 1170, height: 1500)
-        let directory = URL(fileURLWithPath: NSTemporaryDirectory())
-            .appendingPathComponent("seeimage-snapshot", isDirectory: true)
-        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-
-        var urls: [URL] = []
-        for variant in 0..<2 {
-            let image = SampleImage.make(size: size, variant: variant)
-            guard let tiff = image.tiffRepresentation,
-                  let representation = NSBitmapImageRep(data: tiff),
-                  let png = representation.representation(using: .png, properties: [:]) else {
-                continue
-            }
-            let url = directory.appendingPathComponent("sample-\(variant).png")
-            try? png.write(to: url)
-            urls.append(url)
+        var urls = inputs
+        if urls.isEmpty {
+            urls = makeSampleImages()
         }
-
-        guard urls.count == 2 else {
-            print("snapshot: unable to render sample images")
+        guard !urls.isEmpty else {
+            print("snapshot: no images to render")
             return
         }
 
         let controller = ImagePreviewWindowController(
             items: urls.map(ImageItem.init(url:)),
-            startIndex: 1
+            startIndex: urls.count > 1 ? 1 : 0
         )
         guard let window = controller.window else { return }
         window.appearance = NSAppearance(named: .aqua)
         window.setContentSize(NSSize(width: 1120, height: 820))
-        guard let view = window.contentView else { return }
+        guard let view = window.contentView?.superview ?? window.contentView else { return }
         view.layoutSubtreeIfNeeded()
         view.displayIfNeeded()
 
@@ -69,5 +55,26 @@ enum SnapshotRenderer {
         } catch {
             print("snapshot failed: \(error)")
         }
+    }
+
+    private static func makeSampleImages() -> [URL] {
+        let size = NSSize(width: 1170, height: 1500)
+        let directory = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent("seeimage-snapshot", isDirectory: true)
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+
+        var urls: [URL] = []
+        for variant in 0..<2 {
+            let image = SampleImage.make(size: size, variant: variant)
+            guard let tiff = image.tiffRepresentation,
+                  let representation = NSBitmapImageRep(data: tiff),
+                  let png = representation.representation(using: .png, properties: [:]) else {
+                continue
+            }
+            let url = directory.appendingPathComponent("sample-\(variant).png")
+            try? png.write(to: url)
+            urls.append(url)
+        }
+        return urls
     }
 }
