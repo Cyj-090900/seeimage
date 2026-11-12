@@ -1,0 +1,73 @@
+import AppKit
+
+/// Renders the preview window into a PNG without showing it on screen. Used by
+/// CI and by `scripts/preview.sh` to keep documentation screenshots honest.
+enum SnapshotRenderer {
+    static func run(outputPath: String) {
+        let application = NSApplication.shared
+        application.setActivationPolicy(.prohibited)
+
+        let size = NSSize(width: 1170, height: 1500)
+        let directory = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent("seeimage-snapshot", isDirectory: true)
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+
+        var urls: [URL] = []
+        for variant in 0..<2 {
+            let image = SampleImage.make(size: size, variant: variant)
+            guard let tiff = image.tiffRepresentation,
+                  let representation = NSBitmapImageRep(data: tiff),
+                  let png = representation.representation(using: .png, properties: [:]) else {
+                continue
+            }
+            let url = directory.appendingPathComponent("sample-\(variant).png")
+            try? png.write(to: url)
+            urls.append(url)
+        }
+
+        guard urls.count == 2 else {
+            print("snapshot: unable to render sample images")
+            return
+        }
+
+        let controller = ImagePreviewWindowController(
+            items: urls.map(ImageItem.init(url:)),
+            startIndex: 1
+        )
+        guard let window = controller.window else { return }
+        window.appearance = NSAppearance(named: .aqua)
+        window.setContentSize(NSSize(width: 1120, height: 820))
+        guard let view = window.contentView else { return }
+        view.layoutSubtreeIfNeeded()
+        view.displayIfNeeded()
+
+        let bounds = view.bounds
+        guard let representation = NSBitmapImageRep(
+            bitmapDataPlanes: nil,
+            pixelsWide: Int(bounds.width * 2),
+            pixelsHigh: Int(bounds.height * 2),
+            bitsPerSample: 8,
+            samplesPerPixel: 4,
+            hasAlpha: true,
+            isPlanar: false,
+            colorSpaceName: .deviceRGB,
+            bytesPerRow: 0,
+            bitsPerPixel: 0
+        ) else { return }
+        representation.size = bounds.size
+        view.cacheDisplay(in: bounds, to: representation)
+
+        guard let png = representation.representation(using: .png, properties: [:]) else { return }
+        let destination = URL(fileURLWithPath: outputPath)
+        try? FileManager.default.createDirectory(
+            at: destination.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        do {
+            try png.write(to: destination)
+            print("snapshot written to \(destination.path)")
+        } catch {
+            print("snapshot failed: \(error)")
+        }
+    }
+}
