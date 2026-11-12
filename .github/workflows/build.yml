@@ -16,7 +16,7 @@ jobs:
         run: swift --version
 
       - name: Build SeeImage.app
-        run: ./scripts/build-app.sh release
+        run: bash scripts/build-app.sh release
 
       - name: Render window preview
         run: |
